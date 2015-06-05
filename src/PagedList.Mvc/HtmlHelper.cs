@@ -96,10 +96,10 @@ namespace PagedList.Mvc
 			var targetPageNumber = list.PageCount;
 			var last = new TagBuilder("a")
 			           	{
-			           		InnerHtml = string.Format(options.LinkToLastPageFormat, targetPageNumber)
+			           		InnerHtml = options.ViewAllFormat
 			           	};
 			
-			if (list.IsLastPage)
+			if (list.PageCount > 1)
 				return WrapInListItem(last, options, "PagedList-skipToLast", "disabled");
 
 			last.Attributes["href"] = generatePageUrl(targetPageNumber);
@@ -130,6 +130,18 @@ namespace PagedList.Mvc
 			        	};
 
 			return WrapInListItem(a, options, "PagedList-ellipses", "disabled");
+		}
+
+		private static TagBuilder ViewAll(IPagedList list, Func<int, string> generatePageUrl, PagedListRenderOptions options)
+		{
+			var targetPageNumber = options.ViewAllPageIndex;
+			var viewAll = new TagBuilder("a")
+			{
+				InnerHtml = string.Format(options.ViewAllFormat, targetPageNumber)
+			};
+
+			viewAll.Attributes["href"] = generatePageUrl(targetPageNumber);
+			return WrapInListItem(viewAll, options, "PagedList-viewAll");
 		}
 
 		///<summary>
@@ -217,6 +229,15 @@ namespace PagedList.Mvc
 				//if there are subsequent page numbers not displayed, show an ellipsis
 				if (options.DisplayEllipsesWhenNotShowingAllPageNumbers && (firstPageToDisplay + pageNumbersToDisplay - 1) < list.PageCount)
 					listItemLinks.Add(Ellipses(options));
+			}
+
+			//viewAll
+			if (options.DisplayViewAllLink == PagedListDisplayMode.Always || (options.DisplayViewAllLink == PagedListDisplayMode.IfNeeded && list.PageCount > 1))
+			{
+				if (!String.IsNullOrWhiteSpace(options.DelimiterBetweenPageNumbers))
+					listItemLinks.Add(WrapInListItem(options.DelimiterBetweenPageNumbers));
+
+				listItemLinks.Add(ViewAll(list, generatePageUrl, options));
 			}
 
 			//next

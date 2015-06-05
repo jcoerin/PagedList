@@ -30,6 +30,8 @@ namespace PagedList.Mvc
 			LinkToIndividualPageFormat = "{0}";
 			LinkToNextPageFormat = "»";
 			LinkToLastPageFormat = "»»";
+			ViewAllFormat = "View All";
+			ViewAllPageIndex = -1;
 			PageCountAndCurrentLocationFormat = "Page {0} of {1}.";
 			ItemSliceAndTotalFormat = "Showing items {0} through {1} of {2}.";
 			FunctionToDisplayEachPageNumber = null;
@@ -89,6 +91,11 @@ namespace PagedList.Mvc
 		/// If set to Always, render a hyperlink to the next page of the list. If set to IfNeeded, render the hyperlink only when there is a next page in the list.
 		///</summary>
         public PagedListDisplayMode DisplayLinkToNextPage { get; set; }
+
+		///<summary>
+		/// If set to Always, render a hyperlink to the view all. If set to IfNeeded, render the hyperlink only when there is more than one page in the list.
+		///</summary>
+		public PagedListDisplayMode DisplayViewAllLink { get; set; }
 
 		///<summary>
 		/// When true, includes hyperlinks for each page in the list.
@@ -199,6 +206,16 @@ namespace PagedList.Mvc
 		/// Text that will appear between each page number. If null or whitespace is specified, no delimiter will be shown.
 		/// </summary>
 		public string DelimiterBetweenPageNumbers { get; set; }
+
+		///<summary>
+		/// The pre-formatted text to display inside the hyperlink to view all.
+		///</summary>
+		public string ViewAllFormat { get; set; }
+
+		///<summary>
+		/// The index to pass to the PageIndex argument for the "view all" link.
+		///</summary>
+		public int ViewAllPageIndex { get; set; }
 
 		/// <summary>
 		/// An extension point which allows you to fully customize the anchor tags used for clickable pages, as well as navigation features such as Next, Last, etc.
